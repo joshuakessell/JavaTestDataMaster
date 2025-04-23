@@ -1,0 +1,82 @@
+{
+  "extensionName": "Java Fake Data Generator",
+  "description": "A VSCode extension that analyzes Java classes and generates realistic mock data using OpenAI's API.",
+  "commands": [
+    {
+      "title": "Generate Fake Data",
+      "command": "extension.generateFakeData",
+      "when": "editorLangId == java"
+    },
+    {
+      "title": "Configure OpenAI API Key",
+      "command": "extension.configureApiKey"
+    }
+  ],
+  "activationEvents": [
+    "onLanguage:java",
+    "onCommand:extension.generateFakeData",
+    "onCommand:extension.configureApiKey"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.generateFakeData",
+        "title": "Generate Fake Data for Java Class"
+      },
+      {
+        "command": "extension.configureApiKey",
+        "title": "Set OpenAI API Key"
+      }
+    ]
+  },
+  "features": {
+    "codeParsing": {
+      "tech": "Tree-sitter or Regex-based AST walker",
+      "goal": "Identify Java classes, field names, types, and annotations"
+    },
+    "openAiIntegration": {
+      "usage": "Submit class metadata to OpenAI GPT endpoint to generate structured fake data",
+      "apiConfig": "API key stored in local VSCode settings with key 'openai.apiKey'"
+    },
+    "userPrompts": [
+      "Pick class in file",
+      "Select fields to include",
+      "Define data type for ambiguous fields",
+      "Choose output format: JSON, Java snippet, CSV",
+      "Set number of records to generate"
+    ],
+    "outputHandling": [
+      "Insert inline",
+      "Replace placeholder comment",
+      "Export to file",
+      "Copy to clipboard"
+    ],
+    "ui": {
+      "inputBoxes": true,
+      "quickPicks": true,
+      "checkboxes": true,
+      "statusBarFeedback": true,
+      "webviewSettingsPage": "Configure API Key, default format, locale"
+    },
+    "codeLens": {
+      "enabled": true,
+      "actions": [
+        "Generate Data for Class",
+        "Preview Output"
+      ]
+    },
+    "aiPromptFormat": {
+      "template": "Given the following Java class with field names and types: {field_list}. Generate {num} fake objects in {format}. Each object should look realistic and follow field naming conventions. Include values appropriate to types like 'email', 'createdAt', 'price', etc."
+    }
+  },
+  "security": {
+    "apiKeyHandling": "Stored securely in user settings. Warn user if missing. Never transmitted except to OpenAI endpoints."
+  },
+  "dependencies": [
+    "vscode",
+    "node-fetch",
+    "openai",
+    "tree-sitter",
+    "fs-extra"
+  ]
+}
