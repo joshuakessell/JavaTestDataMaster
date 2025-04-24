@@ -1,0 +1,73 @@
+{
+  "name": "java-fake-data-generator",
+  "displayName": "Java Fake Data Generator",
+  "version": "1.0.0",
+  "publisher": "vscode-extensions",
+  "description": "A VSCode extension that analyzes Java classes and generates realistic test data using OpenAI's API",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/java-fake-data-generator"
+  },
+  "engines": {
+    "vscode": "^1.50.0"
+  },
+  "categories": [
+    "Other",
+    "Testing",
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onLanguage:java",
+    "onCommand:extension.generateFakeData",
+    "onCommand:extension.configureApiKey"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.generateFakeData",
+        "title": "Generate Fake Data for Java Class"
+      },
+      {
+        "command": "extension.configureApiKey",
+        "title": "Set OpenAI API Key"
+      }
+    ],
+    "configuration": {
+      "title": "Java Fake Data Generator",
+      "properties": {
+        "openai.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "OpenAI API Key for generating fake data"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "lint": "eslint src --ext ts",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package"
+  },
+  "keywords": [
+    "java",
+    "fake data",
+    "test data",
+    "code generation",
+    "openai"
+  ],
+  "author": "Java Fake Data Generator Team",
+  "license": "MIT",
+  "dependencies": {
+    "fs-extra": "^11.3.0",
+    "openai": "^4.95.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.0",
+    "@types/node": "^16.0.0",
+    "@types/vscode": "^1.50.0",
+    "typescript": "^4.9.5"
+  }
+}

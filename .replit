@@ -1,0 +1,52 @@
+modules = ["nodejs-20"]
+
+[nix]
+channel = "stable-24_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Server"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Demo"
+
+[[workflows.workflow]]
+name = "Server"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "node -e \"console.log('Java Fake Data Generator extension is now active.'); console.log('Testing OpenAI prompt generation:'); const fs = require('fs'); const javaParser = require('./out/javaParser'); const openaiService = require('./out/openaiService'); const javaCode = fs.readFileSync('./SampleUser.java', 'utf8'); const classes = javaParser.parseJavaClass(javaCode); console.log('Parsed class:', classes[0].name); const fieldList = classes[0].fields.map(field => { const semantics = javaParser.analyzeFieldSemantics(field); return { name: field.name, type: field.type, annotations: field.annotations, semantics: semantics.length > 0 ? semantics : undefined }; }); console.log('Field list with semantic hints:'); console.log(JSON.stringify(fieldList, null, 2)); console.log('Example OpenAI prompt:'); console.log(openaiService.buildPrompt(classes[0].name, fieldList, 3, 'JSON format'));\""
+
+[[workflows.workflow]]
+name = "Demo"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "node test-prompt.js"
+
+[deployment]
+run = ["sh", "-c", '''node --unhandled-rejections=strict -e "console.log('Java Fake Data Generator extension is now active.'); console.log('Testing Java class parser and semantic analyzer:'); const fs = require('fs'); const javaParser = require('./out/javaParser'); const javaCode = fs.readFileSync('./SampleUser.java', 'utf8'); const classes = javaParser.parseJavaClass(javaCode); console.log('Parsed class:', classes[0].name); console.log('\\nFields with semantic meanings:'); classes[0].fields.forEach(field => { const semantics = javaParser.analyzeFieldSemantics(field); console.log(`${field.name} (${field.type}): ${semantics.length ? semantics.join(', ') : 'No specific semantics'}`); });"''']
+deploymentTarget = "cloudrun"
